@@ -1,5 +1,5 @@
-require 'hpricot'
-require 'kirei/config'
+require "hpricot"
+require_relative "kirei/config"
 
 # TODO:
 # Make everything a processor (similar to sanitize)
