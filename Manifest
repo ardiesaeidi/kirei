@@ -1,0 +1,5 @@
+Manifest
+Rakefile
+lib/kirei.rb
+lib/kirei/config.rb
+test/kirei_spec.rb
