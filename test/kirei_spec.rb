@@ -16,10 +16,10 @@ describe Kirei, "clean" do
   
   it "should allow custom processing" do
     html = %(<b>here</b> there)
-    expected = %(<b>here</b> gone)
+    expected = %(<b>here</b> <a href="http://a.com">a.com</a>)
     
     text_processor = lambda do |node|
-      node.swap(" gone") if node.text? && node.parent.doc?
+      node.swap(%( <a href="http://a.com" title="a.com">a.com</a>)) if node.text? && node.parent.doc?
     end
     
     Kirei.clean(html, { :processors => [text_processor] }).should == expected

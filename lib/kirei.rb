@@ -61,13 +61,13 @@ class Kirei
         next
       end
       
-      if @config[:protocols].has_key?(node.name)
-        protocol = @config[:protocols][node.name]
+      if @config[:protocols].has_key?(node.name) && @config[:protocols][node.name].has_key?(attr_name)
+        protocol = @config[:protocols][node.name][attr_name]
         
         del = if val.downcase =~ REGEX_PROTOCOL
-                !protocol[attr_name].include?($1.downcase)
+                !protocol.include?($1.downcase)
               else
-                !protocol[attr_name].include?(:relative)
+                !protocol.include?(:relative)
               end
                   
         node.remove_attribute(attr_name) if del
