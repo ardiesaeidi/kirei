@@ -1,32 +1,23 @@
 require 'hpricot'
+require 'kirei/config'
 
-ELEMENTS = ["div", "a", "b", "br", "em", "i", "li", "ol", "p", "small", "strong", "span", "u", "ul", "img"] 
-
-ELEMENT_ATTRIBUTES = {
-        "a" => ["href", "rel"],
-        "img" => ["src"]
-      }
-
-PROTOCOLS = {
-  "a" => {"href" => ["http", "https", "mailto"]},
-  "img" => {"src" => ["http", "https", "ftp", :relative]}
-}
-
+# TODO:
+# Make everything a processor (similar to sanitize)
+# Make removing cdata, comments configurable
+# Revisit need for protocols, just scan styles/src/href for known baddies
+# Normalize text in styles/src/href attributes
 class Kirei
   
-  REGEX_PROTOCOL = /^([A-Za-z0-9\+\-\.\&\;\#\s]*?)(?:\:|&#0*58|&#x0*3a)/i
+  VERSION = "0.3.0"
   
-  WHITE_SPACE_ELEMENTS = %w[
-          address article aside blockquote br dd div dl dt footer h1 h2 h3 h4 h5
-          h6 header hgroup hr li nav ol p pre section ul
-        ]
+  REGEX_PROTOCOL = /^([A-Za-z0-9\+\-\.\&\;\#\s]*?)(?:\:|&#0*58|&#x0*3a)/i
   
   def self.clean(input, config = {})
     Kirei.new(config).clean(input)
   end
   
   def initialize(config = {})
-    @config = config # Config::DEFAULT.merge(config)
+    @config = Config::DEFAULT.merge(config)
   end
   
   def clean(input)
@@ -39,6 +30,7 @@ class Kirei
     doc.to_html
   end
   
+  private
   def clean_node(node)
     
     process_node(node)
@@ -49,7 +41,7 @@ class Kirei
       node.each_child { |child_node| node.before(child_node.to_html)  }
       
       # maintain whitespace for readability
-      del = WHITE_SPACE_ELEMENTS.include?(node.name) ? " " : ""
+      del = @config[:whitespace_elements].include?(node.name) ? " " : ""
       node.swap(del)
       
       return
@@ -84,7 +76,6 @@ class Kirei
   end
   
   def process_node(node)
-    
     return if @config[:processors].nil?
     
     @config[:processors].each do |processor|
@@ -100,43 +91,3 @@ class Kirei
     block.call(node)
   end
 end
-
-
-div_test = %(<div rascal="flats">outer div: <a href="http://wired.com">gotcha</a> <div>div inside outer div: <ul><li>omg ponies</li></ul> <b>way inside div:</b></div></div> outside)
-bad = %(omg ponies <img src="http://wired.com/a.jpg" />)
-
-# do a recursive call
-
-def test_trav(node)
-    
-    if node.respond_to?(:children)
-      node.each_child { |child_node|  test_trav(child_node) }
-    end
-    
-    # start clean ing of node
-    if node.elem? && node.name == "b"
-      node.each_child { |child_node| node.before(child_node.to_html)  }
-      node.swap('')
-    end 
-    
-   #p node
-end
-
-d = Hpricot(div_test)
-test_trav(d)
-
-
-test_text = lambda do |node|
-	node.swap('yes! ') if node.text?
-end
-
-cleaned = Kirei.clean(bad,
-	{:elements => ELEMENTS,
-	:protocols => PROTOCOLS,
-	:attributes => ELEMENT_ATTRIBUTES,
-	:processors => [test_text]
-	})
-
-p bad
-p cleaned
-
