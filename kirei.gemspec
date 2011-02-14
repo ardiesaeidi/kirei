@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = %q{Html sanitizer}
   s.email = %q{ardalan.saeidi@gmail.com}
   s.extra_rdoc_files = ["lib/kirei.rb", "lib/kirei/config.rb"]
-  s.files = ["Rakefile", "lib/kirei.rb", "lib/kirei/config.rb", "test/kirei_spec.rb", "Manifest", "kirei.gemspec"]
+  s.files = ["Manifest", "Rakefile", "lib/kirei.rb", "lib/kirei/config.rb", "test/kirei_spec.rb", "kirei.gemspec"]
   s.homepage = %q{http://github.com/seppuku}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Kirei"]
   s.require_paths = ["lib"]
