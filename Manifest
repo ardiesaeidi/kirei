@@ -3,4 +3,6 @@ Rakefile
 kirei.gemspec
 lib/kirei.rb
 lib/kirei/config.rb
+lib/kirei/processors/clean_node.rb
+lib/kirei/version.rb
 test/kirei_spec.rb

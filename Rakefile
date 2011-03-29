@@ -4,7 +4,7 @@ require "echoe"
 require "./lib/kirei"
 
 Echoe.new("kirei", Kirei::VERSION) do |p|
-  p.description    = "Html sanitizer"
+  p.description    = "HTML sanitizer"
   p.url            = "http://github.com/seppuku"
   p.author         = "Ardie Saeidi"
   p.email          = "ardalan.saeidi@gmail.com"

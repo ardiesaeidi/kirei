@@ -1,4 +1,5 @@
 require "hpricot"
+require_relative "kirei/version"
 require_relative "kirei/config"
 require_relative "kirei/processors/clean_node"
 
@@ -17,7 +18,7 @@ class Kirei
   
   def clean(input)
     doc = Hpricot(input)
-  
+    
     traverse_depth(doc) do |node|
       process_node(node)
     end
