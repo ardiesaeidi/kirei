@@ -19,7 +19,7 @@ describe Kirei, "clean" do
     expected = %(<b>here</b> <a href="http://a.com">a.com</a>)
     
     text_processor = lambda do |node|
-      node.swap(%( <a href="http://a.com" title="a.com">a.com</a>)) if node.text? && node.parent.doc?
+      node.swap(%( <a href="http://a.com" data="test">a.com</a>)) if node.text? && node.parent.doc?
     end
     
     Kirei.clean(html, { :processors => [text_processor] }).should == expected
